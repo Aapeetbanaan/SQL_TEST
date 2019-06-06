@@ -1,0 +1,222 @@
+insert into movie
+values (1, 'titanic', 1997, 120,'english', 1997-01-01, 'bel');
+
+
+
+
+select * from movie;
+
+
+
+
+# answers
+
+# question 1
+select mov_title, mov_year
+from movie;
+
+# question 2
+select mov_year
+from movie
+where mov_title='American beauty';
+
+# question 3
+select mov_title
+from movie
+where mov_year=1999;
+
+# question 4
+select mov_title
+from movie
+where mov_year<1998;
+
+# question 5
+select mov_title from movie
+union
+select rev_name from reviewer;
+
+# question 6
+select distinct rev.rev_name
+from reviewer as rev, rating as rat
+where rev.rev_id=rat.rev_id and rat.rev_stars > 6
+
+# question 7
+select mov_title
+from movie
+where mov_id not in (select distinct mov_id from rating);
+
+# question 8
+select mov_title
+from movie
+where mov_id in (5,7,9);
+
+# question 9
+select act_id
+from actor
+where act_fname='woody' and act_lname='allen';
+
+
+
+
+
+# Question 10 doesn't make sense !!! omit it !!!
+select dir_fname, dir_lname
+from director
+inner join movie_direction on director.dir_id=movie_direction.dir_id
+inner join movie on movie_direction.mov_id=movie.mov_id
+where movie.mov_title='Eyes Wide Shut'
+
+
+select actor.act_id from actor
+inner join movie_cast on movie_cast.act_id=actor.act_id
+inner join movie on movie.mov_id=movie_cast.mov_id
+where movie.mov_title='spetter'
+;
+
+
+# question 11
+select mov_title from movie where mov_rel_country not like 'UK';
+
+
+# question 12
+select distinct mov_title
+from movie
+inner join rating on rating.mov_id=movie.mov_id
+where movie.mov_id in (  select mov_id from movie
+                          group by mov_year
+                          having count(*) > 1)
+and rating.rev_stars > 3;
+
+
+# question 13
+select rev_name, movie.mov_title, rating.rev_stars
+from reviewer
+inner join rating on rating.rev_id=reviewer.rev_id
+inner join movie on movie.mov_id=rating.mov_id
+order by rev_name, movie.mov_title, rating.rev_stars
+;
+
+
+# question 14
+select movie.mov_id, mov_title, max(rating.rev_stars)
+from movie
+inner join rating on movie.mov_id=rating.mov_id
+group by rating.mov_id
+order by 3 desc, 2 asc;
+
+
+# question 15
+select act_fname, act_lname, movie_cast.role
+from actor
+inner join movie_cast on actor.act_id=movie_cast.act_id
+inner join movie on movie.mov_id=movie_cast.mov_id
+where movie.mov_title='Annie Hall';
+
+
+
+# question 16
+select act_id, act_fname, act_lname
+from actor
+where act_id not in
+    (select actor.act_id from actor
+    inner join movie_cast on actor.act_id=movie_cast.act_id
+    inner join movie on movie.mov_id=movie_cast.mov_id
+    where mov_year between 1990 and 2000)
+;
+
+
+# question 17
+select dir_fname, dir_lname, count(genres.gen_title)
+from director
+inner join movie_direction on movie_direction.dir_id=director.dir_id
+inner join movie on movie.mov_id=movie_direction.mov_id
+inner join movie_genres on movie.mov_id=movie_genres.mov_id
+inner join genres on movie_genres.gen_id=genres.gen_id
+group by genres.gen_title
+union
+select dir_fname, dir_lname, genres.gen_title
+from director
+inner join movie_direction on movie_direction.dir_id=director.dir_id
+inner join movie on movie.mov_id=movie_direction.mov_id
+inner join movie_genres on movie.mov_id=movie_genres.mov_id
+inner join genres on movie_genres.gen_id=genres.gen_id
+order by dir_fname, dir_lname
+;
+
+
+# question 18
+select mov_title as title_of_movie,gen_id as genre
+from movie, movie_genres
+where movie.mov_id=movie_genres.mov_id
+order by mov_title;
+
+
+# question 19
+select mov_title, mov_year, mov_dt_rel, mov_time, director.dir_fname, director.dir_lname
+from movie
+inner join movie_direction on movie_direction.mov_id=movie.mov_id
+inner join director on director.dir_id=movie_direction.dir_id
+where mov_dt_rel > 1989-01-01
+order by mov_dt_rel desc;
+
+
+# question 20
+select distinct mov_year
+from movie
+inner join rating on rating.mov_id=movie.mov_id
+and rating.rev_stars in (3,4);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#inner join rating on rating.mov_id=movie.mov_id
+#inner join rating on rating.mov_id=movie.mov_id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+select count(mov_year), mov_title from movie
+group by mov_year
+having count(*) > 1 ;
+
+
+group by mov_year
+having rating.rev_stars > 3;
+
